@@ -1,0 +1,81 @@
+# Creating an Account class 
+# Your Account class must include:
+
+# Attributes
+# owner
+# _balance
+# transactions (list)
+
+# Methods
+# deposit(amount)
+# withdraw(amount)
+# show_balance()
+
+# Requirements
+# prevent withdrawing too much money
+# record deposits/withdrawals in transactions
+# use @property for balance
+
+class Account:
+    def __init__(self, owner, balance):
+        self.owner = owner
+        self._balance = balance
+        self.transactions = []
+
+    @property
+    def balance(self):
+        return self._balance
+
+    def deposit(self, amount):
+        self._balance += amount
+        self.transactions.append(f"Deposited {amount}")
+
+    def withdraw(self, amount):
+        if self._balance < amount:
+            print("Insufficient funds")
+        else:
+            self._balance -= amount
+            self.transactions.append(f"Withdrew {amount}")
+
+    def show_balance(self):
+        print(f"{self.owner} has £{self._balance}")
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+
+class Bank:
+    def __init__(self):
+        self.accounts = {}
+
+    def create_account(self, owner, balance):
+        account = Account(owner, balance)
+        self.accounts[owner] = account
+
+    def get_account(self, owner):
+        return self.accounts.get(owner)
+
+    def transfer(self, sender, receiver, amount):
+        sender_account = self.get_account(sender)
+        receiver_account = self.get_account(receiver)
+
+        if sender_account is None or receiver_account is None:
+            print("Account not found")
+            return
+
+        sender_account.withdraw(amount)
+        receiver_account.deposit(amount)
+
+# Testing my bank and account classes
+
+bank = Bank()
+
+bank.create_account("Sam", 500)
+bank.create_account("Matt", 300)
+
+bank.get_account("Sam")
+
+bank.get_account("Sam").deposit(100)
+bank.get_account("Matt").withdraw(50)
+bank.transfer("Sam", "Matt", 200)
+
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
